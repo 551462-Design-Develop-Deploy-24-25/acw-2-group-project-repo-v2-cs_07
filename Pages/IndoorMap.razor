@@ -1,0 +1,65 @@
+﻿@page "/map"
+@using IndoorNavigation.Services
+@inject RoomSearchService RoomService
+@inject IJSRuntime JS
+
+<div class="map-layout">
+    <div class="sidebar">
+        <button class="floor-btn" @onclick="@(() => ChangeFloor("first"))">1st Floor</button>
+        <button class="floor-btn" @onclick="@(() => ChangeFloor("second"))">2nd Floor</button>
+        <button class="floor-btn" @onclick="@(() => ChangeFloor("third"))">3rd Floor</button>
+    </div>
+
+    <div class="main-content">
+        <h1>InteractiveMapApp</h1>
+        <div class="search-bar">
+            <input @bind="searchQuery" placeholder="Search for room..." />
+            <button @onclick="SearchRoom">Search</button>
+        </div>
+
+        <div class="map-display" style="position: relative;">
+            @if (!string.IsNullOrEmpty(currentSvg))
+            {
+                <object data="@currentSvg" type="image/svg+xml" class="svg-map" id="svgMap"></object>
+            }
+            <div id="room-popup"
+                 style="display: none; position: absolute; background: white; border: 1px solid #ccc; padding: 10px 15px; border-radius: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.3); font-family: sans-serif; font-size: 14px; bottom: 20px; left: 20px; z-index: 999;">
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    private string selectedFloor = "first";
+    private string currentSvg = "svg/first.svg";
+    private string searchQuery = "";
+
+    private async void ChangeFloor(string floor)
+    {
+        selectedFloor = floor;
+        currentSvg = $"svg/{selectedFloor}.svg";
+        await Task.Delay(500);
+        await JS.InvokeVoidAsync("setCurrentLocation");
+        await JS.InvokeVoidAsync("setupRoomHover");
+    }
+
+    private async Task SearchRoom()
+    {
+        var room = RoomService.FindRoom(searchQuery);
+        if (room != null)
+        {
+            selectedFloor = room.Floor.ToLower();
+            currentSvg = $"svg/{selectedFloor}.svg";
+
+            await Task.Delay(500);
+            await JS.InvokeVoidAsync("highlightRoom", room.Id, true); // ✅ true = draw path
+            await JS.InvokeVoidAsync("setCurrentLocation");
+            await JS.InvokeVoidAsync("setupRoomHover");
+        }
+        else
+        {
+            await JS.InvokeVoidAsync("highlightRoom", searchQuery, false);
+            await JS.InvokeVoidAsync("setupRoomHover");
+        }
+    }
+}

@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>IndoorNavigation</title>
+    <base href="/" />
+    <link rel="stylesheet" href="css/bootstrap/bootstrap.min.css" />
+    <link rel="stylesheet" href="css/app.css" />
+    <link rel="icon" type="image/png" href="favicon.png" />
+    <link href="IndoorNavigation.styles.css" rel="stylesheet" />
+</head>
+
+<body>
+    <div id="app">
+        <svg class="loading-progress">
+            <circle r="40%" cx="50%" cy="50%" />
+            <circle r="40%" cx="50%" cy="50%" />
+        </svg>
+        <div class="loading-progress-text"></div>
+    </div>
+
+    <div id="blazor-error-ui">
+        An unhandled error has occurred.
+        <a href="" class="reload">Reload</a>
+        <a class="dismiss">🗙</a>
+    </div>
+
+    <script>
+        let lastClickedRoomId = null;
+
+        window.highlightRoom = (roomId, showLine = false) => {
+            const svgObject = document.getElementById("svgMap");
+            if (!svgObject) return;
+            const svgDoc = svgObject.contentDocument;
+            if (!svgDoc) return;
+
+            const target = svgDoc.getElementById(roomId);
+            if (!target) {
+                showPopup("Room not found.");
+                return;
+            }
+
+            const previous = svgDoc.querySelector(".highlighted");
+            if (previous) {
+                previous.classList.remove("highlighted");
+                previous.style.fill = "";
+                previous.style.stroke = "";
+            }
+
+            target.classList.add("highlighted");
+            target.style.fill = "yellow";
+            target.style.stroke = "black";
+            target.style.strokeWidth = "2px";
+
+            lastClickedRoomId = roomId;
+            showPopup(`Room: ${roomId} <br/><button onclick="navigateToRoom()">Navigate</button>`);
+
+            if (showLine) {
+                drawPathTo(roomId);
+            }
+        };
+
+        function showPopup(htmlContent) {
+            const popup = document.getElementById("room-popup");
+            if (popup) {
+                popup.innerHTML = htmlContent;
+                popup.style.display = "block";
+            }
+        }
+
+        window.navigateToRoom = () => {
+            if (lastClickedRoomId) {
+                drawPathTo(lastClickedRoomId);
+            }
+        };
+
+        window.setupRoomHover = () => {
+            const svgObject = document.getElementById("svgMap");
+            if (!svgObject) return;
+            const svgDoc = svgObject.contentDocument;
+            if (!svgDoc) return;
+
+            const rooms = svgDoc.querySelectorAll("[id]");
+            rooms.forEach(room => {
+                const cloned = room.cloneNode(true);
+                room.parentNode.replaceChild(cloned, room);
+
+                const newRoom = svgDoc.getElementById(cloned.id);
+                if (newRoom) {
+                    newRoom.style.cursor = "pointer";
+                    newRoom.addEventListener("click", () => {
+                        const id = newRoom.getAttribute("id");
+                        highlightRoom(id, false); // 👈 This makes sure it just highlights, no line
+                    });
+                }
+            });
+        };
+
+
+        window.setCurrentLocation = () => {
+            const svgObject = document.getElementById("svgMap");
+            if (!svgObject) return;
+            const svgDoc = svgObject.contentDocument;
+            if (!svgDoc) return;
+
+            const existing = svgDoc.getElementById("current-location");
+            if (existing) existing.remove();
+
+            const circle = svgDoc.createElementNS("http://www.w3.org/2000/svg", "circle");
+            circle.setAttribute("id", "current-location");
+            circle.setAttribute("cx", "200"); // Adjust your start point
+            circle.setAttribute("cy", "550");
+            circle.setAttribute("r", "8");
+            circle.setAttribute("fill", "blue");
+            circle.setAttribute("stroke", "white");
+            circle.setAttribute("stroke-width", "2");
+
+            svgDoc.documentElement.appendChild(circle);
+        };
+
+        function drawPathTo(targetId) {
+            const svgObject = document.getElementById("svgMap");
+            if (!svgObject) return;
+            const svgDoc = svgObject.contentDocument;
+            if (!svgDoc) return;
+
+            const target = svgDoc.getElementById(targetId);
+            const current = svgDoc.getElementById("current-location");
+
+            if (!target || !current) return;
+
+            const existingPath = svgDoc.getElementById("path-to-room");
+            if (existingPath) existingPath.remove();
+
+            const targetBox = target.getBBox();
+            const currentX = parseFloat(current.getAttribute("cx"));
+            const currentY = parseFloat(current.getAttribute("cy"));
+            const targetX = targetBox.x + targetBox.width / 2;
+            const targetY = targetBox.y + targetBox.height / 2;
+
+            const line = svgDoc.createElementNS("http://www.w3.org/2000/svg", "line");
+            line.setAttribute("id", "path-to-room");
+            line.setAttribute("x1", currentX);
+            line.setAttribute("y1", currentY);
+            line.setAttribute("x2", targetX);
+            line.setAttribute("y2", targetY);
+            line.setAttribute("stroke", "red");
+            line.setAttribute("stroke-width", "3");
+            line.setAttribute("stroke-dasharray", "6,3");
+
+            svgDoc.documentElement.appendChild(line);
+        }
+    </script>
+
+    <script src="_framework/blazor.webassembly.js"></script>
+</body>
+
+</html>
