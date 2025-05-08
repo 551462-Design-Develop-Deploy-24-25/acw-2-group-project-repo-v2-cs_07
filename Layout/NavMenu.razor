@@ -1,0 +1,40 @@
+﻿<div class="d-flex">
+    <!-- Toggle Button (always visible) -->
+    <button class="btn btn-primary m-2" @onclick="ToggleNavMenu">
+        <span class="bi @ToggleButtonIcon"></span>
+    </button>
+
+    <!-- Collapsible Sidebar -->
+    <div class="@NavMenuCssClass nav-scrollable sidebar" style="@SidebarStyle">
+        <nav class="flex-column">
+            <div class="nav-item px-3">
+                <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
+                    <span class="bi bi-house-door-fill" aria-hidden="true"></span> Home
+                </NavLink>
+            </div>
+            <div class="nav-item px-3">
+                <NavLink class="nav-link" href="indoormap">
+                    <span class="bi bi-map" aria-hidden="true"></span> Indoor Map
+                </NavLink>
+            </div>
+            <div class="nav-item px-3">
+                <NavLink class="nav-link" href="outdoormap">
+                    <span class="bi bi-geo-alt-fill" aria-hidden="true"></span> Outdoor Map
+                </NavLink>
+            </div>
+        </nav>
+    </div>
+</div>
+
+@code {
+    private bool collapseNavMenu = true;
+
+    private string ToggleButtonIcon => collapseNavMenu ? "bi-list" : "bi-x";
+    private string NavMenuCssClass => collapseNavMenu ? "collapsed" : "";
+    private string SidebarStyle => collapseNavMenu ? "width:0; overflow:hidden;" : "width:250px;";
+
+    private void ToggleNavMenu()
+    {
+        collapseNavMenu = !collapseNavMenu;
+    }
+}

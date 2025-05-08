@@ -1,0 +1,108 @@
+﻿@page "/indoormap"
+@inject HttpClient Http
+@inject IJSRuntime JS
+@using INTERACTIVEMAP.Services
+@inject RoomSearchService SearchService
+@using INTERACTIVEMAP.Models
+@implements IAsyncDisposable
+
+<div class="layout-container">
+    <div class="sidebar">
+        <h4>Indoor Map</h4>
+        <select @onchange="OnFloorChange">
+            <option value="">Choose the floor...</option>
+            <option value="first">First Floor</option>
+            <option value="second">Second Floor</option>
+            <option value="third">Third Floor</option>
+        </select>
+        <br /><br />
+        <h4>Outdoor Map</h4>
+    </div>
+
+    <div class="main-content">
+        <div class="header-bar">
+            <h2>InteractiveMapApp</h2>
+            <div class="search-group">
+                <input type="text" placeholder="Search for room..." @bind="searchTerm" @bind:event="oninput" />
+                <button @onclick="SearchRoom">Search</button>
+            </div>
+        </div>
+
+        <div class="map-display">
+            @if (!string.IsNullOrEmpty(currentSvg))
+            {
+                @((MarkupString)currentSvg)
+            }
+        </div>
+    </div>
+</div>
+
+@code {
+    private string searchTerm = "";
+    private string currentSvg = "";
+    private string selectedFloor = "";
+    private RoomInfo? selectedRoom;
+    private DotNetObjectReference<IndoorMap>? dotNetRef;
+
+    private async Task OnFloorChange(ChangeEventArgs e)
+    {
+        selectedFloor = e.Value?.ToString();
+        if (!string.IsNullOrEmpty(selectedFloor))
+        {
+            await LoadSvg(selectedFloor);
+            selectedRoom = null;
+        }
+    }
+
+    private async Task LoadSvg(string floor)
+    {
+        var path = $"maps/{floor}.svg";
+        currentSvg = await Http.GetStringAsync(path);
+        StateHasChanged();
+        await Task.Delay(100); // Let SVG render
+        await JS.InvokeVoidAsync("clearRoomHighlights");
+    }
+
+    private async Task SearchRoom()
+    {
+        var result = SearchService.GetRoomById(searchTerm);
+        if (result != null && selectedFloor == result.Floor)
+        {
+            selectedRoom = result;
+            await JS.InvokeVoidAsync("clearRoomHighlights");
+            await JS.InvokeVoidAsync("highlightRoomById", result.Id);
+            await JS.InvokeVoidAsync("showRoomPopup", result.Id, $"Room: {result.Name}");
+        }
+        else
+        {
+            await JS.InvokeVoidAsync("clearRoomHighlights");
+        }
+    }
+
+    [JSInvokable]
+    public async Task OnRoomClicked(string roomId)
+    {
+        var room = SearchService.GetRoomById(roomId);
+        if (room != null && room.Floor == selectedFloor)
+        {
+            selectedRoom = room;
+            await JS.InvokeVoidAsync("clearRoomHighlights");
+            await JS.InvokeVoidAsync("highlightRoomById", room.Id);
+            await JS.InvokeVoidAsync("showRoomPopup", room.Id, $"Room: {room.Name}");
+        }
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            dotNetRef = DotNetObjectReference.Create(this);
+            await JS.InvokeVoidAsync("registerRoomClickHandler", dotNetRef);
+        }
+    }
+
+    public async ValueTask DisposeAsync()
+    {
+        dotNetRef?.Dispose();
+    }
+}
