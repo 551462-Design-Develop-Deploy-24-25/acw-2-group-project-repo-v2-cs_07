@@ -763,6 +763,29 @@
             }
         ];
 
+        // Add this at the top of the <script> section, before initMap() is defined
+
+        const FRIENDS = [
+            {
+                name: "Alice",
+                location: { lat: 53.771112, lng: -0.369320 },
+                color: "#FF5733",
+                status: "Studying at the library"
+            },
+            {
+                name: "Bob",
+                location: { lat: 53.770998, lng: -0.370300 },
+                color: "#33FF57",
+                status: "In a meeting at the medical building"
+            },
+            {
+                name: "Charlie",
+                location: { lat: 53.770821, lng: -0.366477 },
+                color: "#3357FF",
+                status: "Attending a lecture in Wilberforce"
+            }
+        ];
+
         // Initialize map
         function initMap() {
             // Initialize map with strict boundaries
