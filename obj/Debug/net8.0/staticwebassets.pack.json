@@ -1,0 +1,77 @@
+{
+  "Files": [
+    {
+      "Id": "C:\\Users\\900828\\Desktop\\Oldone\\INTERACTIVEMAP\\bin\\Debug\\net8.0\\wwwroot\\_framework\\blazor.webassembly.js",
+      "PackagePath": "staticwebassets\\_framework\\blazor.webassembly.js"
+    },
+    {
+      "Id": "C:\\Users\\900828\\Desktop\\Oldone\\INTERACTIVEMAP\\obj\\Debug\\net8.0\\scopedcss\\bundle\\INTERACTIVEMAP.styles.css",
+      "PackagePath": "staticwebassets\\INTERACTIVEMAP.styles.css"
+    },
+    {
+      "Id": "C:\\Users\\900828\\Desktop\\Oldone\\INTERACTIVEMAP\\wwwroot\\css\\app.css",
+      "PackagePath": "staticwebassets\\css\\app.css"
+    },
+    {
+      "Id": "C:\\Users\\900828\\Desktop\\Oldone\\INTERACTIVEMAP\\wwwroot\\css\\bootstrap\\bootstrap.min.css",
+      "PackagePath": "staticwebassets\\css\\bootstrap\\bootstrap.min.css"
+    },
+    {
+      "Id": "C:\\Users\\900828\\Desktop\\Oldone\\INTERACTIVEMAP\\wwwroot\\css\\bootstrap\\bootstrap.min.css.map",
+      "PackagePath": "staticwebassets\\css\\bootstrap\\bootstrap.min.css.map"
+    },
+    {
+      "Id": "C:\\Users\\900828\\Desktop\\Oldone\\INTERACTIVEMAP\\wwwroot\\favicon.png",
+      "PackagePath": "staticwebassets\\favicon.png"
+    },
+    {
+      "Id": "C:\\Users\\900828\\Desktop\\Oldone\\INTERACTIVEMAP\\wwwroot\\icon-192.png",
+      "PackagePath": "staticwebassets\\icon-192.png"
+    },
+    {
+      "Id": "C:\\Users\\900828\\Desktop\\Oldone\\INTERACTIVEMAP\\wwwroot\\index.html",
+      "PackagePath": "staticwebassets\\index.html"
+    },
+    {
+      "Id": "C:\\Users\\900828\\Desktop\\Oldone\\INTERACTIVEMAP\\wwwroot\\map.html",
+      "PackagePath": "staticwebassets\\map.html"
+    },
+    {
+      "Id": "C:\\Users\\900828\\Desktop\\Oldone\\INTERACTIVEMAP\\wwwroot\\maps\\first.svg",
+      "PackagePath": "staticwebassets\\maps\\first.svg"
+    },
+    {
+      "Id": "C:\\Users\\900828\\Desktop\\Oldone\\INTERACTIVEMAP\\wwwroot\\maps\\second.svg",
+      "PackagePath": "staticwebassets\\maps\\second.svg"
+    },
+    {
+      "Id": "C:\\Users\\900828\\Desktop\\Oldone\\INTERACTIVEMAP\\wwwroot\\maps\\third.svg",
+      "PackagePath": "staticwebassets\\maps\\third.svg"
+    },
+    {
+      "Id": "C:\\Users\\900828\\Desktop\\Oldone\\INTERACTIVEMAP\\wwwroot\\sample-data\\weather.json",
+      "PackagePath": "staticwebassets\\sample-data\\weather.json"
+    },
+    {
+      "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.INTERACTIVEMAP.Microsoft.AspNetCore.StaticWebAssetEndpoints.props",
+      "PackagePath": "build\\Microsoft.AspNetCore.StaticWebAssetEndpoints.props"
+    },
+    {
+      "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.INTERACTIVEMAP.Microsoft.AspNetCore.StaticWebAssets.props",
+      "PackagePath": "build\\Microsoft.AspNetCore.StaticWebAssets.props"
+    },
+    {
+      "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.build.INTERACTIVEMAP.props",
+      "PackagePath": "build\\INTERACTIVEMAP.props"
+    },
+    {
+      "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.buildMultiTargeting.INTERACTIVEMAP.props",
+      "PackagePath": "buildMultiTargeting\\INTERACTIVEMAP.props"
+    },
+    {
+      "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.buildTransitive.INTERACTIVEMAP.props",
+      "PackagePath": "buildTransitive\\INTERACTIVEMAP.props"
+    }
+  ],
+  "ElementsToRemove": []
+}

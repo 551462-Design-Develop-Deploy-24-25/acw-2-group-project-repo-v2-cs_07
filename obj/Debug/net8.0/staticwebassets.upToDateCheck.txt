@@ -1,0 +1,11 @@
+wwwroot\css\app.css
+wwwroot\css\bootstrap\bootstrap.min.css
+wwwroot\css\bootstrap\bootstrap.min.css.map
+wwwroot\favicon.png
+wwwroot\icon-192.png
+wwwroot\index.html
+wwwroot\map.html
+wwwroot\maps\first.svg
+wwwroot\maps\second.svg
+wwwroot\maps\third.svg
+wwwroot\sample-data\weather.json

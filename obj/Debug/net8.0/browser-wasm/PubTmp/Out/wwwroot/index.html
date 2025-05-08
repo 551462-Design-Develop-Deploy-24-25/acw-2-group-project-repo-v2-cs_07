@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>INTERACTIVEMAP</title>
+    <base href="/" />
+    <link rel="stylesheet" href="css/bootstrap/bootstrap.min.css" />
+    <link rel="stylesheet" href="css/app.css" />
+    <link rel="icon" type="image/png" href="favicon.png" />
+    <link href="INTERACTIVEMAP.styles.css" rel="stylesheet" />
+</head>
+
+<body>
+    <div id="app">
+        <svg class="loading-progress">
+            <circle r="40%" cx="50%" cy="50%" />
+            <circle r="40%" cx="50%" cy="50%" />
+        </svg>
+        <div class="loading-progress-text"></div>
+    </div>
+
+    <div id="blazor-error-ui">
+        An unhandled error has occurred.
+        <a href="" class="reload">Reload</a>
+        <a class="dismiss">🗙</a>
+    </div>
+
+    <script src="_framework/blazor.webassembly.js"></script>
+
+    <!-- 🔧 SVG Interaction Logic -->
+    <script>
+        let clickHandlerBound = false;
+        let dotNetRef = null;
+
+        window.registerRoomClickHandler = (dotNetHelper) => {
+            dotNetRef = dotNetHelper;
+
+            if (clickHandlerBound) return;
+            clickHandlerBound = true;
+
+            document.addEventListener("click", function (e) {
+                const el = e.target;
+                const id = el?.id;
+
+                if (el?.closest('svg') && id) {
+                    dotNetRef.invokeMethodAsync("OnRoomClicked", id);
+                }
+            });
+        };
+
+        window.clearRoomHighlights = () => {
+            const highlighted = document.querySelectorAll('svg [fill="yellow"]');
+            highlighted.forEach(el => {
+                el.removeAttribute("fill");
+                el.removeAttribute("stroke");
+                el.removeAttribute("stroke-width");
+            });
+
+            document.querySelectorAll("#room-popup").forEach(p => p.remove());
+        };
+
+        window.highlightRoomById = (roomId) => {
+            const el = document.getElementById(roomId);
+            if (el) {
+                el.setAttribute("fill", "yellow");
+                el.setAttribute("stroke", "black");
+                el.setAttribute("stroke-width", "2");
+            }
+        };
+
+        window.showRoomPopup = (roomId, message) => {
+            const el = document.getElementById(roomId);
+            if (!el) return;
+
+            const bbox = el.getBoundingClientRect();
+            const popup = document.createElement("div");
+            popup.id = "room-popup";
+            popup.innerText = message;
+            popup.style.position = "absolute";
+            popup.style.top = (bbox.top + window.scrollY - 40) + "px";
+            popup.style.left = (bbox.left + window.scrollX + 20) + "px";
+            popup.style.background = "white";
+            popup.style.border = "1px solid black";
+            popup.style.padding = "6px 10px";
+            popup.style.zIndex = 9999;
+            popup.style.borderRadius = "4px";
+            popup.style.boxShadow = "0px 2px 6px rgba(0,0,0,0.2)";
+            popup.style.pointerEvents = "none";
+
+            document.querySelectorAll("#room-popup").forEach(e => e.remove());
+            document.body.appendChild(popup);
+
+            setTimeout(() => {
+                popup.remove();
+            }, 4000);
+        };
+    </script>
+</body>
+
+</html>
